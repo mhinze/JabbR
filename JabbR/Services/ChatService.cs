@@ -310,7 +310,7 @@ namespace JabbR.Services
         public ChatUser AddUser(string identity)
         {
             var username = identity.Split('\\')[1];
-            return AddUser(username, identity, string.Format("{0}@example.com", username));
+            return AddUser(username, identity, string.Format("{0}@dell.com", username).ToLower());
         }
 
         public ChatUser AddUser(string userName, string clientId, string userAgent, string password)
