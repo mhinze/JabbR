@@ -144,13 +144,7 @@ namespace JabbR.Commands
 
                 return true;
             }
-            else if (commandName.Equals("nick", StringComparison.OrdinalIgnoreCase))
-            {
-                HandleNick(parts);
-
-                return true;
-            }
-
+            
             return false;
         }
 
@@ -700,121 +694,7 @@ namespace JabbR.Commands
         {
             _notificationService.ShowRooms();
         }
-
-        /// <summary>
-        /// Used to reserve a nick name.
-        /// /nick nickname - sets the user's name to nick name or creates a user with that name
-        /// /nick nickname password - sets a password for the specified nick name (if the current user has that nick name)
-        /// /nick nickname password newpassword - updates the password for the specified nick name (if the current user has that nick name)
-        /// </summary>
-        private void HandleNick(string[] parts)
-        {
-            if (parts.Length == 1)
-            {
-                throw new InvalidOperationException("No nick specified!");
-            }
-
-            string userName = parts[1];
-            if (String.IsNullOrWhiteSpace(userName))
-            {
-                throw new InvalidOperationException("No nick specified!");
-            }
-
-            string password = null;
-            if (parts.Length > 2)
-            {
-                password = parts[2];
-            }
-
-            string newPassword = null;
-            if (parts.Length > 3)
-            {
-                newPassword = parts[3];
-            }
-
-            // See if there is a current user
-            ChatUser user = _repository.GetUserById(_userId);
-
-            if (user == null && String.IsNullOrEmpty(newPassword))
-            {
-                user = _repository.GetUserByName(userName);
-
-                // There's a user with the name specified
-                if (user != null)
-                {
-                    if (String.IsNullOrEmpty(password))
-                    {
-                        ChatService.ThrowPasswordIsRequired();
-                    }
-                    else
-                    {
-                        // If there's no user but there's a password then authenticate the user
-                        _chatService.AuthenticateUser(userName, password);
-
-                        // Add this client to the list of clients for this user
-                        _chatService.AddClient(user, _clientId, _userAgent);
-
-                        // Initialize the returning user
-                        _notificationService.LogOn(user, _clientId);
-                    }
-                }
-                else
-                {
-                    // If there's no user add a new one
-                    user = _chatService.AddUser(userName, _clientId, _userAgent, password);
-
-                    // Notify the user that they're good to go!
-                    _notificationService.OnUserCreated(user);
-                }
-            }
-            else
-            {
-                if (String.IsNullOrEmpty(password))
-                {
-                    string oldUserName = user.Name;
-
-                    // Change the user's name
-                    _chatService.ChangeUserName(user, userName);
-
-                    _notificationService.OnUserNameChanged(user, oldUserName, userName);
-                }
-                else
-                {
-                    // If the user specified a password, verify they own the nick
-                    ChatUser targetUser = _repository.VerifyUser(userName);
-
-                    // Make sure the current user and target user are the same
-                    if (user != targetUser)
-                    {
-                        throw new InvalidOperationException("You can't set/change the password for a nickname you down own.");
-                    }
-
-                    if (String.IsNullOrEmpty(newPassword))
-                    {
-                        if (targetUser.HashedPassword == null)
-                        {
-                            _chatService.SetUserPassword(user, password);
-
-                            _notificationService.SetPassword();
-                        }
-                        else
-                        {
-                            throw new InvalidOperationException("Use /nick [nickname] [oldpassword] [newpassword] to change and existing password.");
-                        }
-                    }
-                    else
-                    {
-                        _chatService.ChangeUserPassword(user, password, newPassword);
-
-                        _notificationService.ChangePassword();
-                    }
-                }
-            }
-
-            // Commit the changes
-            _repository.CommitChanges();
-        }
-
+        
         private void HandleNudge(ChatUser user, string[] parts)
         {
             if (_repository.Users.Count() == 1)

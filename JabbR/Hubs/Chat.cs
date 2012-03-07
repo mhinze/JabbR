@@ -241,7 +241,6 @@ namespace JabbR
         {
             return new[] {
                 new { Name = "help", Description = "Type /help to show the list of commands" },
-                new { Name = "nick", Description = "Type /nick [user] [password] to create a user or change your nickname. You can change your password with /nick [user] [oldpassword] [newpassword]" },
                 new { Name = "join", Description = "Type /join [room] [inviteCode] - to join a channel of your choice. If it is private and you have an invite code, enter it after the room name" },
                 new { Name = "create", Description = "Type /create [room] to create a room" },
                 new { Name = "me", Description = "Type /me 'does anything'" },
