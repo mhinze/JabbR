@@ -1,3 +1,8 @@
+# THIS IS JABBR ENTERPRISE
+This fork uses Windows Authentication and removed the nick command.
+
+---
+
 ## JabbR
 JabbR is a chat application built with ASP.NET using SignalR. 
 
