@@ -14,3 +14,4 @@ msbuild.log
 _Resharper*/
 _AzurePackage/
 *.Publish.xml
+*.orig
