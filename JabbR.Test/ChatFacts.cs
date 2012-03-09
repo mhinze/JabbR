@@ -47,7 +47,12 @@ namespace JabbR.Test
                     Identity = "foo"
                 };
 
-                TestableChat chat = GetTestableChat(clientId, clientState, user);
+                var principal = new Mock<IPrincipal>();
+                var mock = new Mock<IIdentity>();
+                mock.SetupGet(x => x.Name).Returns("foo");
+                principal.Setup(x => x.Identity).Returns(mock.Object);
+
+                TestableChat chat = GetTestableChat(clientId, clientState, user, new NameValueCollection(), principal.Object);
                 chat.Caller.id = "1234";
 
                 bool result = chat.Join();
@@ -92,7 +97,12 @@ namespace JabbR.Test
                 cookies["jabbr.state"] = JsonConvert.SerializeObject(new ClientState { UserId = user.Id });
 
 
-                TestableChat chat = GetTestableChat(clientId, clientState, user, cookies);
+                var principal = new Mock<IPrincipal>();
+                var mock = new Mock<IIdentity>();
+                mock.SetupGet(x => x.Name).Returns("foo");
+                principal.Setup(x => x.Identity).Returns(mock.Object);
+
+                TestableChat chat = GetTestableChat(clientId, clientState, user, cookies, principal.Object);
 
                 bool result = chat.Join();
 
@@ -109,7 +119,7 @@ namespace JabbR.Test
             return GetTestableChat(clientId, clientState, user, new NameValueCollection());
         }
 
-        public static TestableChat GetTestableChat(string clientId, TrackingDictionary clientState, ChatUser user, NameValueCollection cookies)
+        public static TestableChat GetTestableChat(string clientId, TrackingDictionary clientState, ChatUser user, NameValueCollection cookies, IPrincipal principal = null)
         {
             // setup things needed for chat
             var repository = new InMemoryRepository();
@@ -134,11 +144,11 @@ namespace JabbR.Test
             request.Setup(m => m.Cookies).Returns(cookies);
 
             // setup signal agent
-            var prinicipal = new Mock<IPrincipal>();
+            var prinicipal = principal ?? new Mock<IPrincipal>().Object;
             chat.Caller = new SignalAgent(mockedConnectionObject, clientId, "Chat", clientState);
 
             // setup context
-            chat.Context = new HubContext(new HostContext(request.Object, null, prinicipal.Object), clientId);
+            chat.Context = new HubContext(new HostContext(request.Object, null, prinicipal), clientId);
 
             return chat;
         }
