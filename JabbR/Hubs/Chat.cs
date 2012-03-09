@@ -61,12 +61,12 @@ namespace JabbR
             // Get the client state
             ClientState clientState = GetClientState();
 
-            if (HttpContext.Current == null)
+            if (Context.User.Identity == null)
             {
                 return false;
             }
 
-            var identity = HttpContext.Current.User.Identity.Name;
+            var identity = Context.User.Identity.Name;
 
             ChatUser user = _repository.GetUserByIdentity(identity);
 
