@@ -61,22 +61,20 @@ namespace JabbR
             // Get the client state
             ClientState clientState = GetClientState();
 
-            // Try to get the user from the client state
-            ChatUser user = _repository.GetUserById(clientState.UserId);
+            if (Context.User.Identity == null)
+            {
+                return false;
+            }
 
-            // Threre's no user being tracked
+            var identity = Context.User.Identity.Name;
+
+            ChatUser user = _repository.GetUserByIdentity(identity);
+
             if (user == null)
             {
-                return false;
+                user = _service.AddUser(identity);
             }
-
-            // Migrate all users to use new auth
-            if (!String.IsNullOrEmpty(_settings.AuthApiKey) &&
-                String.IsNullOrEmpty(user.Identity))
-            {
-                return false;
-            }
-
+            
             // Update some user values
             _service.UpdateActivity(user, Context.ConnectionId, UserAgent);
             _repository.CommitChanges();
@@ -243,7 +241,6 @@ namespace JabbR
         {
             return new[] {
                 new { Name = "help", Description = "Type /help to show the list of commands" },
-                new { Name = "nick", Description = "Type /nick [user] [password] to create a user or change your nickname. You can change your password with /nick [user] [oldpassword] [newpassword]" },
                 new { Name = "join", Description = "Type /join [room] [inviteCode] - to join a channel of your choice. If it is private and you have an invite code, enter it after the room name" },
                 new { Name = "create", Description = "Type /create [room] to create a room" },
                 new { Name = "me", Description = "Type /me 'does anything'" },

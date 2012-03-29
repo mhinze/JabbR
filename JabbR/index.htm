@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>JabbR</title>
+    <title>JabbR Enterprise</title>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta name="description" content="A real-time chat application. IRC without the R." />
     <meta name="keywords" content="chat,realtime chat,signalr,jabbr" />
@@ -13,38 +13,7 @@
     <link href="Content/KeyTips.css" rel="stylesheet" type="text/css" />
     <link href="Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="Content/emoji20.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript">
-        (function () {
-            if (typeof window.janrain !== 'object') window.janrain = {};
-            window.janrain.settings = {};
-
-            var url = document.location.href;
-            var nav = url.indexOf('#');
-            url = nav > 0 ? url.substring(0, nav) : url;
-            url = url.replace('index.htm', '');
-            janrain.settings.tokenUrl = url + 'Auth/Login.ashx';
-
-            function isReady() { janrain.ready = true; };
-            if (document.addEventListener) {
-                document.addEventListener("DOMContentLoaded", isReady, false);
-            } else {
-                window.attachEvent('onload', isReady);
-            }
-
-            var e = document.createElement('script');
-            e.type = 'text/javascript';
-            e.id = 'janrainAuthWidget';
-
-            if (document.location.protocol === 'https:') {
-                e.src = 'https://rpxnow.com/js/lib/jabbr/engage.js';
-            } else {
-                e.src = 'http://widget-cdn.rpxnow.com/js/lib/jabbr/engage.js';
-            }
-
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(e, s);
-        })();
-    </script>
+    
     <script id="new-message-template" type="text/x-jquery-tmpl">
         <li class="message ${highlight} clearfix" id="m-${id}" data-name="${name}" data-timestamp="${date}">
             <div class="left">
@@ -202,7 +171,7 @@
             </div>
           </div>
 
-        <a href="https://github.com/davidfowl/JabbR" target="_blank">
+        <a href="https://github.com/mhinze/JabbR/tree/enterprise" target="_blank">
             <img style="position: absolute; top: 0; right: 0; border: 0; z-index: 1000" src="https://a248.e.akamai.net/assets.github.com/img/7afbc8b248c68eb468279e8c17986ad46549fb71/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
                 alt="Fork me on GitHub">
         </a>
@@ -211,6 +180,7 @@
                 <h1>
                     Jabb</h1>
                 <img alt="logo" src="Content/images/logo32.png" id="logo" />
+                <h1> Enterprise</h1>
                 <div>
                     Powered by <a href="https://github.com/SignalR/SignalR" target="_blank">SignalR</a></div>
             </div>
