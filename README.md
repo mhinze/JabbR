@@ -1,6 +1,12 @@
 # THIS IS JABBR ENTERPRISE
 This fork uses Windows Authentication and removed the nick command.
 
+If you are using IIS Express, make sure your applicationhost.config file has Windows Authentication set to true.
+
+Applicationhost.config can be found here
+
+- C:\Users\UserName\My Documents\IISExpress\config\applicationhost.config
+
 ---
 
 ## JabbR
